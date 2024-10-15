@@ -26,8 +26,8 @@ connection.connect((err) => {
 
 // Create the server
 const server = http.createServer((req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST");
+  res.setHeader("Access-Control-Allow-Origin", "https://lab05-g8dpahcefwdwhed8.canadacentral-01.azurewebsites.net/");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTION");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   const parsedURL = url.parse(req.url, true);
