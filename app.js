@@ -1,4 +1,3 @@
-const { log } = require("console");
 const http = require("http");
 const url = require("url");
 
