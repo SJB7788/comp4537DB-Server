@@ -35,7 +35,7 @@ const server = http.createServer((req, res) => {
 
   if (req.method === "OPTIONS") {
     console.log("Handling OPTIONS preflight request");
-    res.statusCode(204)
+    res.statusCode = 204
     res.end();
     return;
   }
@@ -71,8 +71,9 @@ const server = http.createServer((req, res) => {
           (err, results) => {
             if (err) {
               console.error("Error inserting data: ", err);
+              res.setHeader("Access-Control-Allow-Origin", "*");
               res.setHeader("Content-Type", "application/json");
-              res.statusCode(500)
+              res.statusCode = 500
               res.end(
                 JSON.stringify({
                   message: "Error inserting data",
@@ -84,8 +85,9 @@ const server = http.createServer((req, res) => {
           }
         );
       });
+      res.setHeader("Access-Control-Allow-Origin", "*");
       res.setHeader("Content-Type", "application/json");
-      res.statusCode(200)
+      res.statusCode = 200
       res.end(
         JSON.stringify({
           message: "Patient data inserted successfully",
@@ -100,8 +102,9 @@ const server = http.createServer((req, res) => {
     connection.query(sqlQueryString, (err, results) => {
       if (err) {
         console.error("Error fetching data: ", err);
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Content-Type", "application/json");
-        res.statusCode(500)
+        res.statusCode = 500
         res.end(
           JSON.stringify({
             message: "Error fetching data",
@@ -111,8 +114,9 @@ const server = http.createServer((req, res) => {
         );
         return;
       }
+      res.setHeader("Access-Control-Allow-Origin", "*");
       res.setHeader("Content-Type", "application/json");
-      res.statusCode(200)
+      res.statusCode = 200
       res.end(JSON.stringify(results)); // Send the results as JSON
     });
   } else if (req.method === "POST" && path === "/query") {
@@ -130,8 +134,9 @@ const server = http.createServer((req, res) => {
         connection.query(sqlQuery, (err, results) => {
           if (err) {
             console.error("Error inserting data: ", err);
+            res.setHeader("Access-Control-Allow-Origin", "*");
             res.setHeader("Content-Type", "application/json");
-            res.statusCode(500)
+            res.statusCode = 500
             res.end(
               JSON.stringify({
                 message: "Error inserting data",
@@ -141,23 +146,28 @@ const server = http.createServer((req, res) => {
             );
             return;
           }
+          res.setHeader("Access-Control-Allow-Origin", "*");
           res.setHeader("Content-Type", "application/json");
-          res.statusCode(200)
+          res.statusCode = 200
           res.end(JSON.stringify(results)); // Send the results as JSON
         });
       } else {
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Content-Type", "application/json");
-        res.statusCode(422)
+        res.statusCode = 422
         res.end(
           JSON.stringify({ error_message: 'Data must contain "Query" key' })
         );
       }
     });
   } else {
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "application/json");
-    res.statusCode(404)
+    res.statusCode = 404
     res.end(JSON.stringify({ message: "Endpoint not found", url: req.url }));
   }
+  console.log(res);
+  
 });
 
 // Start the server
