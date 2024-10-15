@@ -26,16 +26,16 @@ connection.connect((err) => {
 
 // Create the server
 const server = http.createServer((req, res) => {
-  req.setHeader("Access-Control-Allow-Origin", "*");
-  req.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTION");
-  req.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTION");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   const parsedURL = url.parse(req.url, true);
   const path = parsedURL.pathname;
 
   if (req.method === "OPTIONS") {
     console.log("Handling OPTIONS preflight request");
-    res.writeHead(204); // No Content
+    res.statusCode(204)
     res.end();
     return;
   }
@@ -71,7 +71,8 @@ const server = http.createServer((req, res) => {
           (err, results) => {
             if (err) {
               console.error("Error inserting data: ", err);
-              res.writeHead(500, { "Content-Type": "application/json" });
+              res.setHeader("Content-Type", "application/json");
+              res.statusCode(500)
               res.end(
                 JSON.stringify({
                   message: "Error inserting data",
@@ -83,7 +84,8 @@ const server = http.createServer((req, res) => {
           }
         );
       });
-      res.writeHead(200, { "Content-Type": "application/json" });
+      res.setHeader("Content-Type", "application/json");
+      res.statusCode(200)
       res.end(
         JSON.stringify({
           message: "Patient data inserted successfully",
@@ -98,7 +100,8 @@ const server = http.createServer((req, res) => {
     connection.query(sqlQueryString, (err, results) => {
       if (err) {
         console.error("Error fetching data: ", err);
-        res.writeHead(500, { "Content-Type": "application/json" });
+        res.setHeader("Content-Type", "application/json");
+        res.statusCode(500)
         res.end(
           JSON.stringify({
             message: "Error fetching data",
@@ -108,7 +111,8 @@ const server = http.createServer((req, res) => {
         );
         return;
       }
-      res.writeHead(200, { "Content-Type": "application/json" });
+      res.setHeader("Content-Type", "application/json");
+      res.statusCode(200)
       res.end(JSON.stringify(results)); // Send the results as JSON
     });
   } else if (req.method === "POST" && path === "/query") {
@@ -126,7 +130,8 @@ const server = http.createServer((req, res) => {
         connection.query(sqlQuery, (err, results) => {
           if (err) {
             console.error("Error inserting data: ", err);
-            res.writeHead(500, { "Content-Type": "application/json" });
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode(500)
             res.end(
               JSON.stringify({
                 message: "Error inserting data",
@@ -136,18 +141,21 @@ const server = http.createServer((req, res) => {
             );
             return;
           }
-          res.writeHead(200, { "Content-Type": "application/json" });
+          res.setHeader("Content-Type", "application/json");
+          res.statusCode(200)
           res.end(JSON.stringify(results)); // Send the results as JSON
         });
       } else {
-        res.writeHead(422, { "Content-Type": "application/json" });
+        res.setHeader("Content-Type", "application/json");
+        res.statusCode(422)
         res.end(
           JSON.stringify({ error_message: 'Data must contain "Query" key' })
         );
       }
     });
   } else {
-    res.writeHead(404, { "Content-Type": "application/json" });
+    res.setHeader("Content-Type", "application/json");
+    res.statusCode(404)
     res.end(JSON.stringify({ message: "Endpoint not found", url: req.url }));
   }
 });
